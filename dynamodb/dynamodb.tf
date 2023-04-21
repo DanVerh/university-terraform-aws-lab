@@ -14,20 +14,12 @@ resource "aws_dynamodb_table" "authors" {
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "id"
 
-  dynamic "attribute" {
-    for_each = ["id", "firstName", "lastName"]
-    content {
-      name = attribute.value
-      type = "S"
-    }
+  attribute {
+    name = "id"
+    type = "S"
   }
 
-  global_secondary_index {
-    name               = "index"
-    hash_key           = "lastName"
-    range_key          = "firstName"
-    projection_type    = "KEYS_ONLY"
-    non_key_attributes = ["address"]
-  }
-
+  #provisioner "local-exec" {
+    #command = "bash ./provisioners/dbdata.sh"
+  #}
 }
