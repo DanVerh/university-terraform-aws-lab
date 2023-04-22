@@ -1,7 +1,9 @@
 data "archive_file" "get_all_authors" {
+  for_each = var.archive_functions
+
   type        = "zip"
-  source_file = "./functions/get-all-authors/index.js"
-  output_path = "./functions/get-all-authors.zip"
+  source_file = each.value.source_file
+  output_path = each.value.output_path
 }
 
 resource "aws_lambda_function" "get_all_authors" {
