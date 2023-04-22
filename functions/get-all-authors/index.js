@@ -13,7 +13,9 @@ exports.handler = (event, context, callback) => {
       console.log(err);
       callback(err);
     } else {
-      callback(null, data);
+      const authors = data.Items.map(item => {
+          return { id: item.id.S, firstName: item.firstName.S, lastName: item.lastName.S };})
+      callback(null, authors);
     }
   });
 };
