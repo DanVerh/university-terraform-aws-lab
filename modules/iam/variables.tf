@@ -1,1 +1,2 @@
 variable "authors" {}
+variable "courses" {}
