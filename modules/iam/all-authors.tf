@@ -8,6 +8,7 @@ resource "aws_iam_role" "get_all_authors_lambda_role" {
 resource "aws_iam_policy" "get_all_authors_dynamodb_policy" {
   name        = "get-all-authors-dynamodb-policy"
   policy      = templatefile("./policies/get-all-authors.tftpl", { authors = var.authors })
+  #templatefile is used here to dynamically create a policy for required table that we need to take arn from
 }
 
 #Assign created policy to Lambda role
