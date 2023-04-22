@@ -6,11 +6,13 @@ data "archive_file" "get_all_authors" {
   output_path = each.value.output_path
 }
 
-resource "aws_lambda_function" "get_all_authors" {
-  filename      = "./functions/get-all-authors.zip"
-  function_name = "get-all-authors"
+resource "aws_lambda_function" "function" {
+  for_each = var.functions
+  
+  filename      = each.value.filename
+  function_name = each.value.function_name
   role          = var.role
   runtime       = "nodejs12.x"
-  handler = "index.handler"
+  handler       = "index.handler"
 }
 

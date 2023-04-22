@@ -33,3 +33,37 @@ variable "archive_functions" {
     }
   }
 }
+
+variable "functions" {
+  type = map(object({
+    filename = string
+    function_name = string
+  }))
+
+  default = {
+    delete-course = {
+      filename      = "./functions/delete-course.zip"
+      function_name = "delete-course"
+    },
+    get-all-authors = {
+      filename      = "./functions/get-all-authors.zip"
+      function_name = "get-all-authors"
+    },
+    get-all-courses = {
+      filename      = "./functions/get-all-courses.zip"
+      function_name = "get-all-courses"
+    },
+    get-course = {
+      filename      = "./functions/get-course.zip"
+      function_name = "get-course"
+    }
+    save-course = {
+      filename      = "./functions/save-course.zip"
+      function_name = "save-course"
+    },
+    update-course = {
+      filename      = "./functions/update-course.zip"
+      function_name = "update-course"
+    }
+  }
+}
