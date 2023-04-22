@@ -1,4 +1,4 @@
-data "archive_file" "get_all_authors" {
+data "archive_file" "archive_function" {
   for_each = var.archive_functions
 
   type        = "zip"
