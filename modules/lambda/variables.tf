@@ -34,36 +34,58 @@ variable "archive_functions" {
   }
 }
 
-variable "functions" {
+variable "authors_parent" {
+  type = map(string)
+
+  default = {
+    filename      = "./functions/get-all-authors.zip"
+    function_name = "get-all-authors"
+    method = "GET"
+  }
+}
+
+variable "courses_parent" {
   type = map(object({
     filename = string
     function_name = string
+    method = string
   }))
 
+  default = {
+    get-all-courses = {
+      filename      = "./functions/get-all-courses.zip"
+      function_name = "get-all-courses"
+      method = "GET"
+    },
+    save-course = {
+      filename      = "./functions/save-course.zip"
+      function_name = "save-course"
+      method = "POST"
+    }
+  }
+}
+
+variable "courses_child" {
+  type = map(object({
+    filename = string
+    function_name = string
+    method = string
+  }))
   default = {
     delete-course = {
       filename      = "./functions/delete-course.zip"
       function_name = "delete-course"
-    },
-    get-all-authors = {
-      filename      = "./functions/get-all-authors.zip"
-      function_name = "get-all-authors"
-    },
-    get-all-courses = {
-      filename      = "./functions/get-all-courses.zip"
-      function_name = "get-all-courses"
+      method = "DELETE"
     },
     get-course = {
       filename      = "./functions/get-course.zip"
       function_name = "get-course"
-    }
-    save-course = {
-      filename      = "./functions/save-course.zip"
-      function_name = "save-course"
+      method = "GET"
     },
     update-course = {
       filename      = "./functions/update-course.zip"
       function_name = "update-course"
+      method = "PUT"
     }
   }
 }
