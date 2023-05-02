@@ -38,7 +38,7 @@ resource "aws_lambda_permission" "example" {
   function_name = var.authors_parent["name"]
   principal     = "apigateway.amazonaws.com"
 
-  source_arn = aws_api_gateway_deployment.example_deployment.execution_arn
+  source_arn = "${aws_api_gateway_rest_api.courses_api.execution_arn}/*/*"
 }
 
 # Integration
