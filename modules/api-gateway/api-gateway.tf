@@ -25,12 +25,6 @@ resource "aws_api_gateway_resource" "child_resource" {
   path_part   = "{id}"
 }
 
-# Deployment
-resource "aws_api_gateway_deployment" "example_deployment" {
-  rest_api_id = aws_api_gateway_rest_api.courses_api.id
-  stage_name  = "prod"
-}
-
 # Permissions
 resource "aws_lambda_permission" "example" {
   statement_id  = "AllowAPIGatewayInvoke"
@@ -60,6 +54,15 @@ resource "aws_api_gateway_method" "authors_method" {
   api_key_required = false
 }
 
+
+# Deployment
+resource "aws_api_gateway_deployment" "example_deployment" {
+  rest_api_id = aws_api_gateway_rest_api.courses_api.id
+  stage_name  = "prod"
+
+  depends_on = [ aws_api_gateway_method.authors_method ]
+}
+
 # Response
 resource "aws_api_gateway_method_response" "authors_response" {
   rest_api_id = aws_api_gateway_rest_api.courses_api.id
@@ -70,6 +73,8 @@ resource "aws_api_gateway_method_response" "authors_response" {
   response_models = {
     "application/json" = "Empty"
   }
+
+  depends_on = [ aws_api_gateway_deployment.example_deployment ]
 }
 
 # Integration Response
@@ -82,4 +87,6 @@ resource "aws_api_gateway_integration_response" "example" {
   response_templates = {
     "application/json" = "Empty"
   }
+
+  depends_on = [ aws_api_gateway_deployment.example_deployment ]
 }
