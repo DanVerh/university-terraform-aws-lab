@@ -10,10 +10,10 @@ variable "courses_parent" {
   }))
 }
 
-#variable "courses_child" {
-  #type = map(object({
-    #name = string
-    #arn = string
-    #method = string
-  #}))
-#}
+variable "courses_child" {
+  type = map(object({
+    name = string
+    arn = string
+    method = string
+  }))
+}

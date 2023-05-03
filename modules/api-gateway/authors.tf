@@ -49,7 +49,7 @@ resource "aws_api_gateway_deployment" "deployment" {
   rest_api_id = aws_api_gateway_rest_api.courses_api.id
   stage_name  = "prod"
 
-  depends_on = [ aws_api_gateway_method.authors_parent, aws_api_gateway_integration.authors_parent ]
+  depends_on = [ aws_api_gateway_method.authors_parent, aws_api_gateway_integration.authors_parent, aws_api_gateway_method.courses_parent, aws_api_gateway_integration.courses_parent, aws_api_gateway_method.courses_child, aws_api_gateway_integration.courses_child ]
 }
 
 # Response
