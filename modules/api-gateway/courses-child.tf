@@ -28,6 +28,19 @@ resource "aws_api_gateway_integration" "courses_child" {
   type                    = "AWS"
   uri                     = each.value.arn
 
+  request_templates = {
+    "application/json" = <<EOF
+    {
+      "id": "$input.params('id')",
+      "title" : $input.json('$.title'),
+      "authorId" : $input.json('$.authorId'),
+      "length" : $input.json('$.length'),
+      "category" : $input.json('$.category'),
+      "watchHref" : $input.json('$.watchHref')
+    }
+    EOF
+  }
+
   depends_on = [ aws_api_gateway_method.courses_child ]
 }
 
