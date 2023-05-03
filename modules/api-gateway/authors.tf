@@ -73,9 +73,5 @@ resource "aws_api_gateway_integration_response" "example" {
   http_method = var.authors_parent["method"]
   status_code = aws_api_gateway_method_response.authors_parent.status_code
 
-  response_templates = {
-    "application/json" = "Empty"
-  }
-
   depends_on = [ aws_api_gateway_deployment.deployment ]
 }
