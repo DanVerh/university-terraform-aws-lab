@@ -66,7 +66,8 @@ resource "aws_api_gateway_method_response" "authors_parent" {
   response_parameters = {
         "method.response.header.Access-Control-Allow-Headers" = true,
         "method.response.header.Access-Control-Allow-Methods" = true,
-        "method.response.header.Access-Control-Allow-Origin" = true
+        "method.response.header.Access-Control-Allow-Origin" = true,
+        "method.response.header.Access-Control-Expose-Headers" = true
     }
 
   depends_on = [ aws_api_gateway_deployment.deployment ]
@@ -80,10 +81,11 @@ resource "aws_api_gateway_integration_response" "authors_parent" {
   status_code = aws_api_gateway_method_response.authors_parent.status_code
 
   response_parameters = {
-        "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
-        "method.response.header.Access-Control-Allow-Methods" = "'GET,OPTIONS,POST,PUT,DELETE'",
-        "method.response.header.Access-Control-Allow-Origin" = "'*'"
-    }
+    "method.response.header.Access-Control-Allow-Headers" = "'*'",
+    "method.response.header.Access-Control-Allow-Methods" = "'GET,POST,PUT,DELETE'",
+    "method.response.header.Access-Control-Allow-Origin" = "'*'",
+    "method.response.header.Access-Control-Expose-Headers" = "'*'"
+   }
 
   depends_on = [ aws_api_gateway_deployment.deployment ]
 }
@@ -95,7 +97,8 @@ resource "aws_api_gateway_deployment" "prod_deployment" {
 
   triggers = {
     redeployment = sha1(jsonencode([
-      aws_api_gateway_method.authors_parent, aws_api_gateway_integration.authors_parent, aws_api_gateway_method.courses_parent, aws_api_gateway_integration.courses_parent, aws_api_gateway_method.courses_child, aws_api_gateway_integration.courses_child 
+      aws_api_gateway_method.authors_parent, aws_api_gateway_integration.authors_parent, aws_api_gateway_method.courses_parent, aws_api_gateway_integration.courses_parent, aws_api_gateway_method.courses_child, aws_api_gateway_integration.courses_child,
+      aws_api_gateway_integration_response.courses_parent
     ]))
   }
     depends_on = [

@@ -71,7 +71,8 @@ resource "aws_api_gateway_method_response" "courses_child" {
   response_parameters = {
         "method.response.header.Access-Control-Allow-Headers" = true,
         "method.response.header.Access-Control-Allow-Methods" = true,
-        "method.response.header.Access-Control-Allow-Origin" = true
+        "method.response.header.Access-Control-Allow-Origin" = true,
+        "method.response.header.Access-Control-Expose-Headers" = true
     }
 
   depends_on = [ aws_api_gateway_deployment.deployment ]
@@ -87,9 +88,10 @@ resource "aws_api_gateway_integration_response" "courses_child" {
   status_code = aws_api_gateway_method_response.courses_child[each.key].status_code
 
   response_parameters = {
-    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+    "method.response.header.Access-Control-Allow-Headers" = "'*'",
     "method.response.header.Access-Control-Allow-Methods" = "'GET,OPTIONS,POST,PUT,DELETE'",
-    "method.response.header.Access-Control-Allow-Origin" = "'*'"
+    "method.response.header.Access-Control-Allow-Origin" = "'*'",
+    "method.response.header.Access-Control-Expose-Headers" = "'*'"
    }
    
   depends_on = [ aws_api_gateway_deployment.deployment ]
