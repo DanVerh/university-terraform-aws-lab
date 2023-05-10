@@ -20,3 +20,8 @@ module "api-gateway" {
   courses_child = module.lambda.courses_child
   depends_on = [ module.lambda ]
 }
+
+module "s3" {
+  source = "./modules/s3"
+  api_url = module.api-gateway.api_url
+}

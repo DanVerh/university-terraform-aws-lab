@@ -2,3 +2,7 @@
 .terraform.lock.hcl
 terraform.tfstate
 terraform.tfstate.backup
+website/node_modules
+website/build
+website/package-lock.json
+website/src/api/serverUrl.js
