@@ -7,20 +7,15 @@ resource "null_resource" "local" {
     template = local.server_url
   }
 
-  provisioner "local-exec" {
-    command = format(
-      "cat <<\"EOF\" > \"%s\"\n%s\nEOF",
-      "./website/src/api/serverUrl.js",
-      local.server_url
-    )
-  }
+
 }
 
-resource "aws_s3_bucket" "website_s3" {
-  bucket = "danverh"
+resource "aws_s3_bucket" "website" {
+  bucket = "danverh-test"
 
-  provisioner "local-exec" {
+   provisioner "local-exec" {
     command = <<EOF
+      echo '${local.server_url}' > ./website/src/api/serverUrl.js
       cd website
       npm install
       npm run build
@@ -28,15 +23,42 @@ resource "aws_s3_bucket" "website_s3" {
   }
 }
 
-resource "aws_s3_bucket_website_configuration" "website_s3_config" {
-  bucket = aws_s3_bucket.website_s3.bucket
+
+resource "aws_s3_bucket_ownership_controls" "website" {
+  bucket = aws_s3_bucket.website.id
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "website" {
+  bucket = aws_s3_bucket.website.id
+
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
+}
+
+resource "aws_s3_bucket_acl" "website" {
+  depends_on = [
+    aws_s3_bucket_ownership_controls.website,
+    aws_s3_bucket_public_access_block.website,
+  ]
+
+  bucket = aws_s3_bucket.website.id
+  acl    = "public-read"
+}
+
+resource "aws_s3_bucket_website_configuration" "website" {
+  bucket = aws_s3_bucket.website.bucket
   index_document {
     suffix = "index.html"
   }
 }
 
-resource "aws_s3_bucket_policy" "website_policy" {
-  bucket = aws_s3_bucket.website_s3.id
+resource "aws_s3_bucket_policy" "website" {
+  bucket = aws_s3_bucket.website.id
 
   policy = <<EOF
 {
@@ -47,20 +69,20 @@ resource "aws_s3_bucket_policy" "website_policy" {
       "Effect": "Allow",
       "Principal": "*",
       "Action": "s3:GetObject",
-      "Resource": "arn:aws:s3:::${aws_s3_bucket.website_s3.id}/*"
+      "Resource": "arn:aws:s3:::${aws_s3_bucket.website.id}/*"
     }
   ]
 }
 EOF
 }
 
-resource "aws_s3_bucket_object" "website_files" {
+resource "aws_s3_bucket_object" "website" {
   for_each = fileset("./website/build", "**/*")
   acl    = "public-read"
-  bucket = aws_s3_bucket.website_s3.id
+  bucket = aws_s3_bucket.website.id
   key    = each.key
 
   source = "./website/build/${each.key}"
 
-  depends_on = [ aws_s3_bucket_policy.website_policy ]
+  depends_on = [ aws_s3_bucket_policy.website ]
 }
