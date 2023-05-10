@@ -1,26 +1,19 @@
 locals {
-    server_url = templatefile("serverUrl.js.tftpl", { apiurl = var.api_url })
+    server_url = templatefile("./website-templates/serverUrl.js.tftpl", { apiurl = var.api_url })
+    website_url = templatefile("./website-templates/package.json.tftpl", { bucket = aws_s3_bucket.website.bucket, region = "us-east-1" })
 }
 
 resource "null_resource" "local" {
   triggers = {
-    template = local.server_url
+    template1 = local.server_url
+    template2 = local.website_url
   }
 
-
+  depends_on = [ aws_s3_bucket.website ]
 }
 
 resource "aws_s3_bucket" "website" {
   bucket = "danverh-test"
-
-   provisioner "local-exec" {
-    command = <<EOF
-      echo '${local.server_url}' > ./website/src/api/serverUrl.js
-      cd website
-      npm install
-      npm run build
-    EOF
-  }
 }
 
 
@@ -52,28 +45,47 @@ resource "aws_s3_bucket_acl" "website" {
 
 resource "aws_s3_bucket_website_configuration" "website" {
   bucket = aws_s3_bucket.website.bucket
+
   index_document {
     suffix = "index.html"
   }
+
+  provisioner "local-exec" {
+    command = <<EOF
+      echo '${local.server_url}' > ./website/src/api/serverUrl.js
+      echo '${local.website_url}' > ./website/package.json
+      cd website
+      npm install
+      npm run build
+    EOF
+  }
 }
 
-resource "aws_s3_bucket_policy" "website" {
-  bucket = aws_s3_bucket.website.id
+#resource "aws_s3_bucket_policy" "website" {
+  #bucket = aws_s3_bucket.website.id
+#
+  #policy = <<EOF
+#{
+  #"Version": "2012-10-17",
+  #"Statement": [
+    #{
+      #"Sid": "PublicReadGetObject",
+      #"Effect": "Allow",
+      #"Principal": "*",
+      #"Action": "s3:GetObject",
+      #"Resource": "arn:aws:s3:::${aws_s3_bucket.website.id}/*"
+    #}
+  #]
+#}
+#EOF
+#}
 
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "PublicReadGetObject",
-      "Effect": "Allow",
-      "Principal": "*",
-      "Action": "s3:GetObject",
-      "Resource": "arn:aws:s3:::${aws_s3_bucket.website.id}/*"
-    }
-  ]
-}
-EOF
+locals {
+  content_type_map = {
+   "js" = "application/json"
+   "html" = "text/html"
+   "css"  = "text/css"
+  }
 }
 
 resource "aws_s3_bucket_object" "website" {
@@ -81,8 +93,11 @@ resource "aws_s3_bucket_object" "website" {
   acl    = "public-read"
   bucket = aws_s3_bucket.website.id
   key    = each.key
-
+  #key    = each.value
   source = "./website/build/${each.key}"
+  #source = "./website/build/${each.value}"
 
-  depends_on = [ aws_s3_bucket_policy.website ]
+  content_type = "text/html"
+  #content_type = lookup(local.content_type_map, split(".", "${each.value}")[1], "text/html")
+  depends_on = [ aws_s3_bucket_acl.website ]
 }
