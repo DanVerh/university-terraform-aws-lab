@@ -6,11 +6,15 @@ module "iam" {
   source = "./modules/iam"
   authors = module.dynamodb.authors_arn
   courses = module.dynamodb.courses_arn
+
+  depends_on = [ module.dynamodb ]
 }
 
 module "lambda" {
   source = "./modules/lambda"
   role = module.iam.role_arn
+
+  depends_on = [ module.iam ]
 }
 
 module "api-gateway" {

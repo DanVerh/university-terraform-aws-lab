@@ -94,13 +94,7 @@ resource "aws_api_gateway_integration_response" "authors_parent" {
 resource "aws_api_gateway_deployment" "prod_deployment" {
   rest_api_id = aws_api_gateway_rest_api.courses_api.id
   stage_name  = "prod"
-
-  triggers = {
-    redeployment = sha1(jsonencode([
-      aws_api_gateway_method.authors_parent, aws_api_gateway_integration.authors_parent, aws_api_gateway_method.courses_parent, aws_api_gateway_integration.courses_parent, aws_api_gateway_method.courses_child, aws_api_gateway_integration.courses_child,
-      aws_api_gateway_integration_response.courses_parent
-    ]))
-  }
+  
     depends_on = [
         aws_api_gateway_method_response.authors_parent, 
         aws_api_gateway_method_response.courses_parent,
