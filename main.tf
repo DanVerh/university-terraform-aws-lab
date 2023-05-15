@@ -24,4 +24,6 @@ module "api-gateway" {
 module "s3" {
   source = "./modules/s3"
   api_url = module.api-gateway.api_url
+
+  depends_on = [ module.api-gateway ]
 }

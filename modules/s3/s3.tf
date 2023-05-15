@@ -78,6 +78,8 @@ resource "aws_s3_bucket_policy" "website" {
   ]
 }
 EOF
+
+depends_on = [ aws_s3_bucket_acl.website ]
 }
 
 locals {
@@ -92,13 +94,10 @@ resource "aws_s3_bucket_object" "website" {
   for_each = fileset("./website/build", "**/*")
   acl    = "public-read"
   bucket = aws_s3_bucket.website.id
-  #key    = each.key
   key    = each.value
-  #source = "./website/build/${each.key}"
   source = "./website/build/${each.value}"
 
-  #content_type = "text/html"
   content_type = lookup(local.content_type_map, split(".", "./website/build/${each.value}")[length(split(".", "./website/build/${each.value}")) - 1], "text/html")
 
-  depends_on = [ aws_s3_bucket_acl.website, aws_s3_bucket_website_configuration.website ]
+  depends_on = [ aws_s3_bucket_policy.website ]
 }
