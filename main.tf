@@ -31,3 +31,7 @@ module "s3" {
 
   depends_on = [ module.api-gateway ]
 }
+
+module "monitoring" {
+  source = "./modules/monitoring"
+}
