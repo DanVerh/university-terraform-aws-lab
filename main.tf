@@ -35,3 +35,7 @@ module "s3" {
 module "monitoring" {
   source = "./modules/monitoring"
 }
+
+output "website_url" {
+  value = module.s3.cloudfront_url
+}
