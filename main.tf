@@ -34,6 +34,9 @@ module "s3" {
 
 module "monitoring" {
   source = "./modules/monitoring"
+
+  role_arn = module.iam.role_arn
+  role_name = module.iam.role_name
 }
 
 output "website_url" {

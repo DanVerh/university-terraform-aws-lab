@@ -30,6 +30,10 @@ variable "archive_functions" {
     update-course = {
       source_file = "./functions/update-course/index.js"
       output_path = "./functions/update-course.zip"
+    },
+    error = {
+      source_file = "./functions/error/index.py"
+      output_path = "./functions/error.zip"
     }
   }
 }
