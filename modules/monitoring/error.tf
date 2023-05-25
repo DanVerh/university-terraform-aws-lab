@@ -22,7 +22,6 @@ resource "aws_lambda_function" "error" {
 
 resource "aws_iam_policy" "error_policy" {
   name        = "error-policy"
-  #policy      = templatefile("./policies/error-policy.tftpl", { sns_topic_arn = aws_sns_topic.alarms.arn, region = "us-east-1", account_number = data.aws_caller_identity.current.account_id, function_name = var.error_function.function_name, function_arn = aws_lambda_function.error.arn })
   policy      = templatefile("./policies/error-policy.tftpl", { sns_topic_arn = aws_sns_topic.alarms.arn, function_arn = aws_lambda_function.error.arn })
 }
 
