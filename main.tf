@@ -34,9 +34,13 @@ module "s3" {
 
 module "monitoring" {
   source = "./modules/monitoring"
-
   role_arn = module.iam.role_arn
   role_name = module.iam.role_name
+  authors_parent = module.lambda.authors_parent
+  courses_parent = module.lambda.courses_parent
+  courses_child = module.lambda.courses_child
+
+  depends_on = [ module.s3 ]
 }
 
 output "website_url" {

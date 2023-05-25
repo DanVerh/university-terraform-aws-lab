@@ -10,7 +10,7 @@ resource "aws_lambda_function" "authors_parent" {
   filename      = var.authors_parent.filename
   function_name = var.authors_parent.function_name
   role          = var.role
-  runtime       = "nodejs12.x"
+  runtime       = "nodejs16.x"
   handler       = "index.handler"
 
   tags = {
@@ -24,7 +24,7 @@ resource "aws_lambda_function" "courses_parent" {
   filename      = each.value.filename
   function_name = each.value.function_name
   role          = var.role
-  runtime       = "nodejs12.x"
+  runtime       = "nodejs16.x"
   handler       = "index.handler"
 
   tags = {
@@ -38,7 +38,7 @@ resource "aws_lambda_function" "courses_child" {
   filename      = each.value.filename
   function_name = each.value.function_name
   role          = var.role
-  runtime       = "nodejs12.x"
+  runtime       = "nodejs16.x"
   handler       = "index.handler"
 
   tags = {
