@@ -2,9 +2,22 @@ data "aws_caller_identity" "current" {}
 
 resource "aws_cloudwatch_log_group" "authors" {
   name              = "/aws/lambda/${var.authors_parent["name"]}"
-  retention_in_days = 90
+  retention_in_days = null
 }
 
+resource "aws_cloudwatch_log_group" "courses_parent" {
+  for_each = var.courses_parent
+
+  name              = "/aws/lambda/${each.value.name}"
+  retention_in_days = null
+}
+
+resource "aws_cloudwatch_log_group" "courses_child" {
+  for_each = var.courses_child
+
+  name              = "/aws/lambda/${each.value.name}"
+  retention_in_days = null
+}
 
 resource "aws_lambda_function" "error" {  
   filename      = var.error_function.filename
@@ -38,7 +51,27 @@ resource "aws_lambda_permission" "authors" {
   source_arn = "${aws_cloudwatch_log_group.authors.arn}:*"
 }
 
-resource "aws_cloudwatch_log_subscription_filter" "authors_error" {
+resource "aws_lambda_permission" "courses_parent" {
+  for_each = var.courses_parent
+
+  statement_id  = "courses-parent-${each.key}-permission"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.error.arn
+  principal     = "logs.us-east-1.amazonaws.com"
+  source_arn = "${aws_cloudwatch_log_group.courses_parent[each.key].arn}:*"
+}
+
+resource "aws_lambda_permission" "courses_child" {
+  for_each = var.courses_child
+
+  statement_id  = "courses-child-${each.key}-permission"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.error.arn
+  principal     = "logs.us-east-1.amazonaws.com"
+  source_arn = "${aws_cloudwatch_log_group.courses_child[each.key].arn}:*"
+}
+
+resource "aws_cloudwatch_log_subscription_filter" "authors" {
   name            = "authors-subscription-filter"
   log_group_name  = "/aws/lambda/${var.authors_parent["name"]}"
   filter_pattern  = "?ERROR ?WARN ?5xx"
@@ -47,41 +80,24 @@ resource "aws_cloudwatch_log_subscription_filter" "authors_error" {
   depends_on = [ aws_lambda_permission.authors ]
 }
 
+resource "aws_cloudwatch_log_subscription_filter" "courses_parent" {
+  for_each = var.courses_parent
 
-#resource "aws_cloudwatch_log_subscription_filter" "courses_parent_error" {
-  #for_each = var.courses_parent
-#
-  #name            = "courses-parent-subscription-filter"
-  #log_group_name  = "/aws/lambda/${each.value.name}"
-  #filter_pattern  = "?ERROR ?WARN ?5xx"
-  #destination_arn = aws_lambda_function.error.arn
-#}
-#
-#resource "aws_lambda_permission" "courses_parent" {
-  #for_each = var.courses_parent
-#
-  #statement_id  = "courses-parent-permission"
-  #action        = "lambda:InvokeFunction"
-  #function_name = each.value.name
-  #principal     = "logs.amazonaws.com"
-  #source_arn    = aws_cloudwatch_log_subscription_filter.courses_parent_error.role_arn
-#}
-#
-#resource "aws_cloudwatch_log_subscription_filter" "courses_child_error" {
-  #for_each = var.courses_child
-#
-  #name            = "courses-child-subscription-filter"
-  #log_group_name  = "/aws/lambda/${each.value.name}"
-  #filter_pattern  = "?ERROR ?WARN ?5xx"
-  #destination_arn = aws_lambda_function.error.arn
-#}
-#
-#resource "aws_lambda_permission" "courses_child" {
-  #for_each = var.courses_child
-#
-  #statement_id  = "courses-child-permission"
-  #action        = "lambda:InvokeFunction"
-  #function_name = each.value.name
-  #principal     = "logs.amazonaws.com"
-  #source_arn    = aws_cloudwatch_log_subscription_filter.courses_child_error.role_arn
-#}
+  name            = "courses-parent-${each.key}-subscription-filter"
+  log_group_name  = "/aws/lambda/${each.value.name}"
+  filter_pattern  = "?ERROR ?WARN ?5xx"
+  destination_arn = aws_lambda_function.error.arn
+
+  depends_on = [ aws_lambda_permission.courses_parent ]
+}
+
+resource "aws_cloudwatch_log_subscription_filter" "courses_child" {
+  for_each = var.courses_child
+
+  name            = "courses-child-${each.key}-subscription-filter"
+  log_group_name  = "/aws/lambda/${each.value.name}"
+  filter_pattern  = "?ERROR ?WARN ?5xx"
+  destination_arn = aws_lambda_function.error.arn
+
+  depends_on = [ aws_lambda_permission.courses_child ]
+}
