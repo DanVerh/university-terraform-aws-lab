@@ -13,6 +13,8 @@ module "dynamodb" {
 
 module "iam" {
   source = "./modules/iam"
+
+  naming = module.naming.id
   authors = module.dynamodb.authors_arn
   courses = module.dynamodb.courses_arn
 

@@ -1,3 +1,4 @@
+variable "naming" {}
 variable "authors" {}
 variable "courses" {}
 
