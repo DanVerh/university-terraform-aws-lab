@@ -1,3 +1,5 @@
+variable "naming" {}
+
 variable "authors_parent" {
   type = map(string)
 }

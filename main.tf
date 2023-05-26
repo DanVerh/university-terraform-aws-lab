@@ -32,9 +32,12 @@ module "lambda" {
 
 module "api-gateway" {
   source = "./modules/api-gateway"
+  
+  naming = module.naming.id
   authors_parent = module.lambda.authors_parent
   courses_parent = module.lambda.courses_parent
   courses_child = module.lambda.courses_child
+  
   depends_on = [ module.lambda ]
 }
 
