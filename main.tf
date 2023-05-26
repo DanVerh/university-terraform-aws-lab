@@ -52,6 +52,8 @@ module "s3" {
 
 module "monitoring" {
   source = "./modules/monitoring"
+
+  naming = module.naming.id
   role_arn = module.iam.role_arn
   role_name = module.iam.role_name
   authors_parent = module.lambda.authors_parent
