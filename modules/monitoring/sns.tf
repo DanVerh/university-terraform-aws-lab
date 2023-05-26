@@ -1,5 +1,5 @@
 resource "aws_sns_topic" "alarms" {
-  name = "alarms"
+  name = "${var.naming}-alarms"
 }
 
 resource "aws_sns_topic_subscription" "alarms" {

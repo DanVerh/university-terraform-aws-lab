@@ -13,7 +13,7 @@ resource "null_resource" "local" {
 }
 
 resource "aws_s3_bucket" "website" {
-  bucket = "danverh"
+  bucket = "${var.naming}-danverh"
 
 }
 

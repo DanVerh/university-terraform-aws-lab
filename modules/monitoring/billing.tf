@@ -1,5 +1,5 @@
 resource "aws_cloudwatch_metric_alarm" "billing" {
-  alarm_name          = "billing_alarm"
+  alarm_name          = "${var.naming}-billing_alarm"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "1"
   metric_name         = "EstimatedCharges"

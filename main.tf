@@ -37,12 +37,14 @@ module "api-gateway" {
   authors_parent = module.lambda.authors_parent
   courses_parent = module.lambda.courses_parent
   courses_child = module.lambda.courses_child
-  
+
   depends_on = [ module.lambda ]
 }
 
 module "s3" {
   source = "./modules/s3"
+
+  naming = module.naming.id
   api_url = module.api-gateway.api_url
 
   depends_on = [ module.api-gateway ]

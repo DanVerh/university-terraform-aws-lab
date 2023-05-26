@@ -21,7 +21,7 @@ resource "aws_cloudwatch_log_group" "courses_child" {
 
 resource "aws_lambda_function" "error" {  
   filename      = var.error_function.filename
-  function_name = var.error_function.function_name
+  function_name = "${var.naming}-${var.error_function.function_name}"
   role          = var.role_arn
   runtime       = "python3.7"
   handler       = "index.lambda_handler"
@@ -44,7 +44,7 @@ resource "aws_iam_role_policy_attachment" "error_policy_attachment" {
 }
 
 resource "aws_lambda_permission" "authors" {
-  statement_id  = "authors-permission"
+  statement_id  = "${var.naming}-authors-permission"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.error.arn
   principal     = "logs.us-east-1.amazonaws.com"
@@ -54,7 +54,7 @@ resource "aws_lambda_permission" "authors" {
 resource "aws_lambda_permission" "courses_parent" {
   for_each = var.courses_parent
 
-  statement_id  = "courses-parent-${each.key}-permission"
+  statement_id  = "${var.naming}-courses-parent-${each.key}-permission"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.error.arn
   principal     = "logs.us-east-1.amazonaws.com"
@@ -64,7 +64,7 @@ resource "aws_lambda_permission" "courses_parent" {
 resource "aws_lambda_permission" "courses_child" {
   for_each = var.courses_child
 
-  statement_id  = "courses-child-${each.key}-permission"
+  statement_id  = "${var.naming}-courses-child-${each.key}-permission"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.error.arn
   principal     = "logs.us-east-1.amazonaws.com"
@@ -72,7 +72,7 @@ resource "aws_lambda_permission" "courses_child" {
 }
 
 resource "aws_cloudwatch_log_subscription_filter" "authors" {
-  name            = "authors-subscription-filter"
+  name            = "${var.naming}-authors-subscription-filter"
   log_group_name  = "/aws/lambda/${var.authors_parent["name"]}"
   filter_pattern  = "?ERROR ?WARN ?5xx"
   destination_arn = aws_lambda_function.error.arn
@@ -83,7 +83,7 @@ resource "aws_cloudwatch_log_subscription_filter" "authors" {
 resource "aws_cloudwatch_log_subscription_filter" "courses_parent" {
   for_each = var.courses_parent
 
-  name            = "courses-parent-${each.key}-subscription-filter"
+  name            = "${var.naming}-courses-parent-${each.key}-subscription-filter"
   log_group_name  = "/aws/lambda/${each.value.name}"
   filter_pattern  = "?ERROR ?WARN ?5xx"
   destination_arn = aws_lambda_function.error.arn
@@ -94,7 +94,7 @@ resource "aws_cloudwatch_log_subscription_filter" "courses_parent" {
 resource "aws_cloudwatch_log_subscription_filter" "courses_child" {
   for_each = var.courses_child
 
-  name            = "courses-child-${each.key}-subscription-filter"
+  name            = "${var.naming}-courses-child-${each.key}-subscription-filter"
   log_group_name  = "/aws/lambda/${each.value.name}"
   filter_pattern  = "?ERROR ?WARN ?5xx"
   destination_arn = aws_lambda_function.error.arn

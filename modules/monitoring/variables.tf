@@ -1,3 +1,4 @@
+variable "naming" {}
 variable "role_arn" {}
 variable "role_name" {}
 
