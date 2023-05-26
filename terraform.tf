@@ -8,7 +8,7 @@ terraform {
   required_version = ">= 1.2.3"
 
   backend "s3" {
-    bucket         = "verkhutin-tfstate"
+    bucket         = "lpnu-cloudtech-state"
     key            = "terraform.tfstate"
     region         = "us-east-1"
   }
