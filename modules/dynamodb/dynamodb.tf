@@ -22,7 +22,7 @@ resource "aws_dynamodb_table" "authors" {
     type = "S"
   }
 
-  #provisioner "local-exec" {
-    #command = "bash ./provisioners/dbdata.sh"
-  #}
+  provisioner "local-exec" {
+    command = "bash ./provisioners/dbdata.sh"
+  }
 }

@@ -1,4 +1,3 @@
-aws dynamodb put-item --table-name authors --item \ 
-'{"id": {"S": "1"}, "firstName": {"S": "John"}, "lastName": {"S": "Johnson"}}' \
-'{"id": {"S": "2"}, "firstName": {"S": "Jack"}, "lastName": {"S": "Jackson"}}' \
-'{"id": {"S": "2"}, "firstName": {"S": "Carl"}, "lastName": {"S": "Carlson"}}' 
+aws dynamodb put-item --table-name authors --item '{"id": {"S": "cory-house"}, "firstName": {"S": "Cory"}, "lastName": {"S": "House"}}'
+aws dynamodb put-item --table-name authors --item '{"id": {"S": "samer-buma"}, "firstName": {"S": "Samer"}, "lastName": {"S": "Buma"}}' 
+aws dynamodb put-item --table-name authors --item '{"id": {"S": "deborah-kurata"}, "firstName": {"S": "Deborah"}, "lastName": {"S": "Kurata"}}' 
