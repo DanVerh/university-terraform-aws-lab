@@ -1,12 +1,10 @@
 locals {
     server_url = templatefile("./website-templates/serverUrl.js.tftpl", { apiurl = var.api_url })
-    website_url = templatefile("./website-templates/package.json.tftpl", { bucket = aws_s3_bucket.website.bucket, region = "us-east-1" })
 }
 
 resource "null_resource" "local" {
   triggers = {
     template1 = local.server_url
-    template2 = local.website_url
   }
 
   depends_on = [ aws_s3_bucket.website ]
@@ -73,7 +71,6 @@ EOF
  provisioner "local-exec" {
     command = <<EOF
       echo '${local.server_url}' > ./website/src/api/serverUrl.js
-      echo '${local.website_url}' > ./website/package.json
       cd website
       npm install
       npm run build
