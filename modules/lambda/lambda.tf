@@ -8,7 +8,7 @@ data "archive_file" "archive_function" {
 
 resource "aws_lambda_function" "authors_parent" {  
   filename      = var.authors_parent.filename
-  function_name = var.authors_parent.function_name
+  function_name = "${var.naming}-${var.authors_parent.function_name}"
   role          = var.role
   runtime       = "nodejs16.x"
   handler       = "index.handler"
@@ -22,7 +22,7 @@ resource "aws_lambda_function" "courses_parent" {
   for_each = var.courses_parent
   
   filename      = each.value.filename
-  function_name = each.value.function_name
+  function_name = "${var.naming}-${each.value.function_name}"
   role          = var.role
   runtime       = "nodejs16.x"
   handler       = "index.handler"
@@ -36,7 +36,7 @@ resource "aws_lambda_function" "courses_child" {
   for_each = var.courses_child
   
   filename      = each.value.filename
-  function_name = each.value.function_name
+  function_name = "${var.naming}-${each.value.function_name}"
   role          = var.role
   runtime       = "nodejs16.x"
   handler       = "index.handler"

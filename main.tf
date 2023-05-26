@@ -23,6 +23,8 @@ module "iam" {
 
 module "lambda" {
   source = "./modules/lambda"
+
+  naming = module.naming.id
   role = module.iam.role_arn
 
   depends_on = [ module.iam ]

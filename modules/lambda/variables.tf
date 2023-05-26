@@ -1,3 +1,4 @@
+variable "naming" {}
 variable "role" {}
 
 variable "archive_functions" {
