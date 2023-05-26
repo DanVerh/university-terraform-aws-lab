@@ -40,7 +40,7 @@ module "monitoring" {
   courses_parent = module.lambda.courses_parent
   courses_child = module.lambda.courses_child
 
-  depends_on = [ module.s3 ]
+  depends_on = [ module.lambda ]
 }
 
 output "website_url" {

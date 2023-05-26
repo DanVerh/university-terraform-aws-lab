@@ -13,7 +13,8 @@ resource "null_resource" "local" {
 }
 
 resource "aws_s3_bucket" "website" {
-  bucket = "danverh-test1"
+  bucket = "danverh"
+
 }
 
 
@@ -49,16 +50,6 @@ resource "aws_s3_bucket_website_configuration" "website" {
   index_document {
     suffix = "index.html"
   }
-
-  provisioner "local-exec" {
-    command = <<EOF
-      echo '${local.server_url}' > ./website/src/api/serverUrl.js
-      echo '${local.website_url}' > ./website/package.json
-      cd website
-      npm install
-      npm run build
-    EOF
-  }
 }
 
 resource "aws_s3_bucket_policy" "website" {
@@ -78,6 +69,16 @@ resource "aws_s3_bucket_policy" "website" {
   ]
 }
 EOF
+
+ provisioner "local-exec" {
+    command = <<EOF
+      echo '${local.server_url}' > ./website/src/api/serverUrl.js
+      echo '${local.website_url}' > ./website/package.json
+      cd website
+      npm install
+      npm run build
+    EOF
+  }
 
 depends_on = [ aws_s3_bucket_acl.website ]
 }
@@ -99,5 +100,5 @@ resource "aws_s3_bucket_object" "website" {
 
   content_type = lookup(local.content_type_map, split(".", "./website/build/${each.value}")[length(split(".", "./website/build/${each.value}")) - 1], "text/html")
 
-  depends_on = [ aws_s3_bucket_policy.website, aws_s3_bucket_website_configuration.website ]
+  depends_on = [ aws_s3_bucket_policy.website  ]
 }
