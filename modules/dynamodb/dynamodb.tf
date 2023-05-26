@@ -1,6 +1,6 @@
 #Table for courses
 resource "aws_dynamodb_table" "courses" {
-  name         = "courses"
+  name         = "${var.naming}-courses"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "id"
 
@@ -13,7 +13,7 @@ resource "aws_dynamodb_table" "courses" {
 
 #Table for authors
 resource "aws_dynamodb_table" "authors" {
-  name         = "authors"
+  name         = "${var.naming}-authors"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "id"
 

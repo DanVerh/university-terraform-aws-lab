@@ -1,5 +1,14 @@
+module "naming" {
+  source   = "cloudposse/label/null"
+
+  namespace  = "edu"
+  stage      = "prod"
+}
+
 module "dynamodb" {
   source = "./modules/dynamodb"
+
+  naming = module.naming.id
 }
 
 module "iam" {
