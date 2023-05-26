@@ -7,8 +7,6 @@ module "naming" {
 
 module "dynamodb" {
   source = "./modules/dynamodb"
-
-  naming = module.naming.id
 }
 
 module "iam" {
