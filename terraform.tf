@@ -8,7 +8,7 @@ terraform {
   required_version = ">= 1.2.3"
 
   backend "s3" {
-    bucket         = "lpnu-cloudtech-state"
+    bucket         = "lpnu-cloudtech-state" #place your bucket name for state here
     key            = "terraform.tfstate"
     region         = "us-east-1"
   }

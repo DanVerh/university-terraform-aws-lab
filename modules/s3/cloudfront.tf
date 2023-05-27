@@ -36,5 +36,5 @@ resource "aws_cloudfront_distribution" "web_app" {
     cloudfront_default_certificate = true
   }
 
-  depends_on = [ aws_s3_bucket_object.website ]
+  depends_on = [ aws_s3_object.website ]
 }

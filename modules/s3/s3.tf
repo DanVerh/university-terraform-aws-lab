@@ -88,7 +88,7 @@ locals {
   }
 }
 
-resource "aws_s3_bucket_object" "website" {
+resource "aws_s3_object" "website" {
   for_each = fileset("./website/build", "**/*")
   acl    = "public-read"
   bucket = aws_s3_bucket.website.id
