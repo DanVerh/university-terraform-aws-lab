@@ -43,6 +43,7 @@ module "s3" {
   source = "./modules/s3"
 
   naming = module.naming.id
+  bucket_name = var.site_bucket_name
   api_url = module.api-gateway.api_url
 
   depends_on = [ module.api-gateway ]
@@ -52,6 +53,7 @@ module "monitoring" {
   source = "./modules/monitoring"
 
   naming = module.naming.id
+  email = var.email
   role_arn = module.iam.role_arn
   role_name = module.iam.role_name
   authors_parent = module.lambda.authors_parent

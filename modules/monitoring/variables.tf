@@ -1,6 +1,7 @@
 variable "naming" {}
 variable "role_arn" {}
 variable "role_name" {}
+variable "email" {}
 
 variable "error_function" {
   type = map(string)
