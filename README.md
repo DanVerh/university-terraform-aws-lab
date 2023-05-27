@@ -15,8 +15,9 @@ Locally install:
 # How to use?
 1. Create an S3 bucket with versioning enabled for terraform remote state. Place the name of bucket in `terraform.tf`
 2. `aws configure` in terminal (provide there your access key id, secret access key and region)
-3. *Optionally:* put different S3 bucket name in `./modules/s3/s3.tf`
-4. `terraform init`
+3. `terraform init`
+4. Provide as an input values to requested variables
+*Bucket name needs to be globally unique*
 5. `terraform apply`
 
 # If you face any ERRORS
