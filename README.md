@@ -4,7 +4,7 @@
 # Description
 This Terraform code for AWS provider deploys the React app hosting it in S3 bucket and distributing with Cloudfront. Backend is based on Lambda functions for each request that are triggered by API Gateway. Data is stored in DynamoDB. Monitoring is set up with CloudWatch which triggers error Lambda function that with help of SNS sends alert on subscribed to topic emails. Billing alarm is also there.
 
-*Note: frontend React code and Lamda fucntions are not written by me*
+*Note: frontend React code and Lamda functions are not written by me*
 
 # Prerequisites
 Locally install:
